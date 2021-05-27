@@ -18,10 +18,17 @@ class SecondFragment : Fragment() {
         container: ViewGroup?,                  // ViewGroup - класс кот сост. из View и других ViewGroup
         savedInstanceState: Bundle?             // Bundle - хранилище в кот. харнится пара ключ-значение для передачи м/у компонентами: фрагментами, активити
     ): View? {
-        return inflater.inflate(R.layout.fragment_second, container, false)              // inflate - создание из содержимого layout-файла View-элемента
+        return inflater.inflate(
+            R.layout.fragment_second,
+            container,
+            false
+        )              // inflate - создание из содержимого layout-файла View-элемента
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {                           // ПРИВЯЗЫВАЕМ ЛОГИКУ К ВЬЮХАМ
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?
+    ) {                           // ПРИВЯЗЫВАЕМ ЛОГИКУ К ВЬЮХАМ
         super.onViewCreated(view, savedInstanceState)                                               /* Вызывается сразу после возврата {@link #onCreateView (LayoutInflater, ViewGroup, Bundle)}, но до восстановления
                                                                                                     любого сохраненного состояния в представлении. Это дает подклассам возможность инициализировать себя, как только
                                                                                                     они узнают, что их иерархия представлений полностью создана. Однако на этом этапе иерархия представления фрагмента
@@ -38,22 +45,27 @@ class SecondFragment : Fragment() {
 
         backButton?.setOnClickListener {                                // При нажатии на кнопку(back) будет вызываться это действие
             // TODO: implement back
-            parentFragmentManager.beginTransaction().replace(R.id.container, // beginTransaction позволяет делать что-либо с фрагментами(мы заменяем второй фрагмент на первый)
-                FirstFragment.newInstance(random))                      // первому фрагменту передаем результат рандома
+            parentFragmentManager.beginTransaction().replace(
+                R.id.container, // beginTransaction позволяет делать что-либо с фрагментами(мы заменяем второй фрагмент на первый)
+                FirstFragment.newInstance(random)
+            )                      // первому фрагменту передаем результат рандома
                 .commit()                                               // commit - осуществление транзакции
         }
+
+
     }
 
-    private fun generate(min: Int, max: Int): Int {                     // функция генерации случайного числа в заданных пределах, возвращает рандомное число
+
+    private fun generate(
+        min: Int,
+        max: Int
+    ): Int {                     // функция генерации случайного числа в заданных пределах, возвращает рандомное число
         // TODO: generate random number
-        val result: Int
-
-        if(min>max)
-            result = (max..min).random()
-        else
-            result = (min..max).random()
-        return result
+        return (min..max).random()
     }
+
+
+
 
     companion object {                                                  // сопутствующий объект для удобного доступа к членам класса внутри него
 
@@ -68,6 +80,12 @@ class SecondFragment : Fragment() {
             fragment.arguments = args
             return fragment
         }
+
+        /*override fun onDestroyView(){
+            super.onDestroyView()
+            backButton = null
+            result = null
+        }*/
 
         private const val MIN_VALUE_KEY = "MIN_VALUE"
         private const val MAX_VALUE_KEY = "MAX_VALUE"
