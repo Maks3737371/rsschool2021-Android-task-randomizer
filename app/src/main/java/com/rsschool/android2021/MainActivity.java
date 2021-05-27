@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-public class MainActivity extends AppCompatActivity /*implements FirstFragment.FirstFragmentInterface, SecondFragment.SecondFragmentInterface*/ {                                                                                                   // класс, унаследованный от AppCompatActivity используется для создания Activity
+public class MainActivity extends AppCompatActivity /*implements FirstFragment.FirstInterface, SecondFragment.SecondInterface*/ {                                                                                                   // класс, унаследованный от AppCompatActivity используется для создания Activity
 
     private Boolean secondFragmentOn;
     private Integer randomVal;
@@ -44,8 +44,10 @@ public class MainActivity extends AppCompatActivity /*implements FirstFragment.F
 
     @Override
     public void onBackPressed() {
-        if (secondFragmentOn) {
+        if (secondFragmentOn)
+        {
             openFirstFragment(randomVal);
-        } else super.onBackPressed();
+        }
+        else super.onBackPressed();
     }
 }

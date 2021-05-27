@@ -18,17 +18,10 @@ class SecondFragment : Fragment() {
         container: ViewGroup?,                  // ViewGroup - класс кот сост. из View и других ViewGroup
         savedInstanceState: Bundle?             // Bundle - хранилище в кот. харнится пара ключ-значение для передачи м/у компонентами: фрагментами, активити
     ): View? {
-        return inflater.inflate(
-            R.layout.fragment_second,
-            container,
-            false
-        )              // inflate - создание из содержимого layout-файла View-элемента
+        return inflater.inflate(R.layout.fragment_second, container, false)              // inflate - создание из содержимого layout-файла View-элемента
     }
 
-    override fun onViewCreated(
-        view: View,
-        savedInstanceState: Bundle?
-    ) {                           // ПРИВЯЗЫВАЕМ ЛОГИКУ К ВЬЮХАМ
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {                           // ПРИВЯЗЫВАЕМ ЛОГИКУ К ВЬЮХАМ
         super.onViewCreated(view, savedInstanceState)                                               /* Вызывается сразу после возврата {@link #onCreateView (LayoutInflater, ViewGroup, Bundle)}, но до восстановления
                                                                                                     любого сохраненного состояния в представлении. Это дает подклассам возможность инициализировать себя, как только
                                                                                                     они узнают, что их иерархия представлений полностью создана. Однако на этом этапе иерархия представления фрагмента
@@ -43,37 +36,35 @@ class SecondFragment : Fragment() {
         result?.text = random.toString()
 
 
-        backButton?.setOnClickListener {                                // При нажатии на кнопку(back) будет вызываться это действие
+        backButton?.setOnClickListener {                                                            // При нажатии на кнопку(back) будет вызываться это действие
             // TODO: implement back
-            parentFragmentManager.beginTransaction().replace(
-                R.id.container, // beginTransaction позволяет делать что-либо с фрагментами(мы заменяем второй фрагмент на первый)
-                FirstFragment.newInstance(random)
-            )                      // первому фрагменту передаем результат рандома
-                .commit()                                               // commit - осуществление транзакции
+            parentFragmentManager.beginTransaction().replace(R.id.container,                        // beginTransaction позволяет делать что-либо с фрагментами(мы заменяем второй фрагмент на первый)
+                FirstFragment.newInstance(random))                                                  // первому фрагменту передаем результат рандома
+                .commit()                                                                           // commit - осуществление транзакции
         }
 
 
     }
 
 
-    private fun generate(
-        min: Int,
-        max: Int
-    ): Int {                     // функция генерации случайного числа в заданных пределах, возвращает рандомное число
+    private fun generate(min: Int, max: Int): Int                                                   // функция генерации случайного числа в заданных пределах, возвращает рандомное число
+    {
         // TODO: generate random number
         return (min..max).random()
     }
 
 
+    private var listener: SecondInterface? = null
+    interface SecondInterface{
+        fun openFirstFragment(randomNumber: Int)
+    }
 
 
     companion object {                                                  // сопутствующий объект для удобного доступа к членам класса внутри него
-
         @JvmStatic                                                      //// На JVM вы можете иметь члены сопутствующих объектов, сгенерированные как настоящие статические методы и поля, если вы используете @JvmStaticаннотацию
         fun newInstance(min: Int, max: Int): SecondFragment {           // Фукнция которая будет создавать фрамент
             val fragment = SecondFragment()                             // Обозначаем фрагменту что используется первый фрагмент
             val args = Bundle()                                         // ЗДЕСЬ ПЕРЕДАЮТСЯ АРГУМЕНТЫ ВО ФРАГМЕНТ
-
             // TODO: implement adding arguments
             args.putInt(MIN_VALUE_KEY, min)
             args.putInt(MAX_VALUE_KEY, max)

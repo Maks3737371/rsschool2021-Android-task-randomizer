@@ -14,12 +14,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.rsschool.android2021.SecondFragment.Companion.newInstance
 
- class FirstFragment : Fragment() {      // Создаем класс для первого фрагмента и наследуемся от Fragment
+class FirstFragment : Fragment() {      // Создаем класс для первого фрагмента и наследуемся от Fragment
 
     private var generateButton: Button? = null      // объявление кнопки (Generate)
     private var previousResult: TextView? = null    // текстВьюха (Previous Result)
     private var min: EditText? = null
     private var max: EditText? = null
+
+
 
     override fun onCreateView(                      // Присоединение(onAttach) фрагмента к LayOut
         inflater: LayoutInflater,                   // Класс, кот. умеет из содержимого layout-файла(xml) создать View-элемент
@@ -74,8 +76,12 @@ import com.rsschool.android2021.SecondFragment.Companion.newInstance
 
         generateButton?.setOnClickListener {                                                        // При нажатии на кнопку будет вызываться это действие
             // TODO: send min and max to the SecondFragment
+            val secondFragment: Fragment = newInstance(min?.text.toString().toInt(), max?.text.toString().toInt())
+            val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()
+            transaction.replace(R.id.container, secondFragment)
+                .commit()
 
-            if(min?.text.toString() == "" || max?.text.toString() == "")                                                          // если хоть одно поле пустое - выводим тост
+            /*if(min?.text.toString() == "" || max?.text.toString() == "")                                                          // если хоть одно поле пустое - выводим тост
             {
                 Toast.makeText(context, "Please, fill all data fields", Toast.LENGTH_SHORT).show()
             }
@@ -83,28 +89,32 @@ import com.rsschool.android2021.SecondFragment.Companion.newInstance
             {
 
                 if (min?.text.toString().toInt() > max?.text.toString().toInt())
-                    Toast.makeText(context, "Minimum value must be less than Max", Toast.LENGTH_SHORT).show()      // делаем тост снизу что мин зн-е должно быть больше максимального
-                else if (min?.text.toString().toInt() < max?.text.toString().toInt())                                                                     // Если все норм
+                    Toast.makeText(context, "Minimum value must be less than Max", Toast.LENGTH_SHORT).show()               // делаем тост снизу что мин зн-е должно быть больше максимального
+                else if (min?.text.toString().toInt() < max?.text.toString().toInt())                                           // Если все норм
                 {
-                    val secondFragment: Fragment = newInstance(min?.text.toString().toInt(), max?.text.toString().toInt())                                // Фукнция которая будет создавать фрамент
+                    val secondFragment: Fragment = newInstance(min?.text.toString().toInt(), max?.text.toString().toInt())      // Фукнция которая будет создавать фрамент
                     val transaction: FragmentTransaction = parentFragmentManager.beginTransaction()     // beginTransaction позволяет делать что-либо с фрагментами
                     transaction.replace(R.id.container, secondFragment)                                 // через транзакцию заменяем первый фрагмент вторым. Контейнер - вьюха в которой будет лежать наш фрагмент
                         .commit()                                                                       // commit - осуществление транзакции
                 }
-            }
+            }*/
         }
     }
 
 
-    companion object {                                              // сопутствующий объект для удобного доступа к членам класса внутри него
+    private var listener: FirstInterface ?= null
+    interface FirstInterface {                                      // Передаем данные через интерфейс для Activity
+        fun openSecoundFragment(previousResult: Int)
+    }
 
+    companion object {                                              // сопутствующий объект для удобного доступа к членам класса внутри него
         @JvmStatic                                                  //// На JVM вы можете иметь члены сопутствующих объектов, сгенерированные как настоящие статические методы и поля, если вы используете @JvmStaticаннотацию
-        fun newInstance(previousResult: Int): FirstFragment {       // Фукнция которая будет создавать фрамент
+        fun newInstance(previousResult: Int): FirstFragment         // Фукнция которая будет создавать фрамент
+        {
             val fragment = FirstFragment()                          // Обозначаем фрагменту что используется первый фрагмент
             val args = Bundle()                                     // ЗДЕСЬ ПЕРЕДАЮТСЯ АРГУМЕНТЫ ВО ФРАГМЕНТ
             args.putInt(PREVIOUS_RESULT_KEY, previousResult)        // Вставляет значение типа int в отображение этого bundle, заменяя любое существующее значение для данного ключа
             fragment.arguments = args                               // передаем аргументам фрагмента хранилище
-
             return fragment
         }
 
