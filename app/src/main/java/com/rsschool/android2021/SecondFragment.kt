@@ -1,5 +1,6 @@
 package com.rsschool.android2021
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,17 @@ class SecondFragment : Fragment() {
 
     private var backButton: Button? = null
     private var result: TextView? = null
+    private var mListener: SecoundFragmentInterface? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mListener == context as SecoundFragmentInterface
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        mListener = null
+    }
 
     override fun onCreateView(                  // Присоединение(onAttach) фрагмента к LayOut
         inflater: LayoutInflater,               // Класс, кот. умеет из содержимого layout-файла(xml) создать View-элемент
@@ -23,42 +35,34 @@ class SecondFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {                           // ПРИВЯЗЫВАЕМ ЛОГИКУ К ВЬЮХАМ
         super.onViewCreated(view, savedInstanceState)                                               /* Вызывается сразу после возврата {@link #onCreateView (LayoutInflater, ViewGroup, Bundle)}, но до восстановления
-                                                                                                    любого сохраненного состояния в представлении. Это дает подклассам возможность инициализировать себя, как только
-                                                                                                    они узнают, что их иерархия представлений полностью создана. Однако на этом этапе иерархия представления фрагмента
-                                                                                                    не привязана к его родительскому элементу.*/
+                                                                                                    * любого сохраненного состояния в представлении. Это дает подклассам возможность инициализировать себя, как только
+                                                                                                    * они узнают, что их иерархия представлений полностью создана. Однако на этом этапе иерархия представления фрагмента
+                                                                                                    * не привязана к его родительскому элементу.*/
         result = view.findViewById(R.id.result)
         backButton = view.findViewById(R.id.back)
 
         val min = arguments?.getInt(MIN_VALUE_KEY) ?: 0
         val max = arguments?.getInt(MAX_VALUE_KEY) ?: 0
-
         val random = generate(min, max)
         result?.text = random.toString()
 
-
         backButton?.setOnClickListener {                                                            // При нажатии на кнопку(back) будет вызываться это действие
             // TODO: implement back
-            parentFragmentManager.beginTransaction().replace(R.id.container,                        // beginTransaction позволяет делать что-либо с фрагментами(мы заменяем второй фрагмент на первый)
-                FirstFragment.newInstance(random))                                                  // первому фрагменту передаем результат рандома
-                .commit()                                                                           // commit - осуществление транзакции
+
+            mListener?.openFirstFragment (random)                                                                         // commit - осуществление транзакции
         }
-
-
     }
 
+
+    interface SecoundFragmentInterface {
+        fun openFirstFragment(randomNumber: Int)
+    }
 
     private fun generate(min: Int, max: Int): Int                                                   // функция генерации случайного числа в заданных пределах, возвращает рандомное число
     {
         // TODO: generate random number
         return (min..max).random()
     }
-
-
-    private var listener: SecondInterface? = null
-    interface SecondInterface{
-        fun openFirstFragment(randomNumber: Int)
-    }
-
 
     companion object {                                                  // сопутствующий объект для удобного доступа к членам класса внутри него
         @JvmStatic                                                      //// На JVM вы можете иметь члены сопутствующих объектов, сгенерированные как настоящие статические методы и поля, если вы используете @JvmStaticаннотацию
@@ -72,13 +76,13 @@ class SecondFragment : Fragment() {
             return fragment
         }
 
-        /*override fun onDestroyView(){
-            super.onDestroyView()
-            backButton = null
-            result = null
-        }*/
-
         private const val MIN_VALUE_KEY = "MIN_VALUE"
         private const val MAX_VALUE_KEY = "MAX_VALUE"
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        backButton = null
+        result = null
     }
 }
