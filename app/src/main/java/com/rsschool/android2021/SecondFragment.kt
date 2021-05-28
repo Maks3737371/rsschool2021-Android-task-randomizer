@@ -7,23 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 
 class SecondFragment : Fragment() {
 
     private var backButton: Button? = null
     private var result: TextView? = null
-    private var mListener: SecoundFragmentInterface? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mListener == context as SecoundFragmentInterface
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        mListener = null
-    }
 
     override fun onCreateView(                  // Присоединение(onAttach) фрагмента к LayOut
         inflater: LayoutInflater,               // Класс, кот. умеет из содержимого layout-файла(xml) создать View-элемент
@@ -47,42 +37,46 @@ class SecondFragment : Fragment() {
         result?.text = random.toString()
 
         backButton?.setOnClickListener {                                                            // При нажатии на кнопку(back) будет вызываться это действие
-            // TODO: implement back
 
-            mListener?.openFirstFragment (random)                                                                         // commit - осуществление транзакции
+            mainActivity().openFirstFragment(random)
         }
     }
 
 
-    interface SecoundFragmentInterface {
-        fun openFirstFragment(randomNumber: Int)
-    }
-
-    private fun generate(min: Int, max: Int): Int                                                   // функция генерации случайного числа в заданных пределах, возвращает рандомное число
-    {
-        // TODO: generate random number
-        return (min..max).random()
+    private fun generate(min: Int, max: Int): Int {
+        randomVal = (min..max).random()
+        return randomVal
     }
 
     companion object {                                                  // сопутствующий объект для удобного доступа к членам класса внутри него
         @JvmStatic                                                      //// На JVM вы можете иметь члены сопутствующих объектов, сгенерированные как настоящие статические методы и поля, если вы используете @JvmStaticаннотацию
-        fun newInstance(min: Int, max: Int): SecondFragment {           // Фукнция которая будет создавать фрамент
-            val fragment = SecondFragment()                             // Обозначаем фрагменту что используется первый фрагмент
-            val args = Bundle()                                         // ЗДЕСЬ ПЕРЕДАЮТСЯ АРГУМЕНТЫ ВО ФРАГМЕНТ
-            // TODO: implement adding arguments
-            args.putInt(MIN_VALUE_KEY, min)
-            args.putInt(MAX_VALUE_KEY, max)
-            fragment.arguments = args
-            return fragment
+
+
+
+        fun newInstance(min: Int, max: Int) = SecondFragment().apply {
+            arguments = bundleOf(SecondFragment.MIN_VALUE_KEY to min, SecondFragment.MAX_VALUE_KEY to max)
         }
+
+        @JvmStatic
+        var randomVal: Int = 0
 
         private const val MIN_VALUE_KEY = "MIN_VALUE"
         private const val MAX_VALUE_KEY = "MAX_VALUE"
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        backButton = null
-        result = null
-    }
 }
+
+
+//fun newInstance(min: Int, max: Int): SecondFragment {           // Фукнция которая будет создавать фрамент
+//val fragment = SecondFragment()                             // Обозначаем фрагменту что используется первый фрагмент
+/*val args = Bundle()                                         // Хранилице, ЗДЕСЬ ПЕРЕДАЮТСЯ АРГУМЕНТЫ ВО ФРАГМЕНТ
+args.putInt(MIN_VALUE_KEY, min)
+args.putInt(MAX_VALUE_KEY, max)
+fragment.arguments = args
+return fragment*/
+/*
+mListener?.openFirstFragment(random)
+override fun onDestroyView() {
+    super.onDestroyView()
+    backButton = null
+    result = null
+}*/
