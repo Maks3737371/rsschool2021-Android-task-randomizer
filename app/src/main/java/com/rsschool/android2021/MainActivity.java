@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-public class MainActivity extends AppCompatActivity implements MainActivityInterface {      // класс, унаследованный от AppCompatActivity используется для создания Activity
+public class MainActivity extends AppCompatActivity implements MainActivityInterface {              // класс, унаследованный от AppCompatActivity используется для создания Activity
     private Boolean firstFragmentOn;
 
     @Override
@@ -17,17 +17,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityInter
     }
 
     public void openFirstFragment(int previousNumber) {
-        firstFragmentOn = true;                                                                   // флаг что второе окно не открыто
+        firstFragmentOn = true;                                                                     // флаг что второе окно не открыто
         final Fragment firstFragment = FirstFragment.newInstance(previousNumber);                   // создаем новый первый фрагмент
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();     // getSupportFragmentManager - чтобы запускать фрагмент из Активити.
                                                                                                     // beginTransaction позволяет делать что-либо с фрагментами
         transaction.replace(R.id.container, firstFragment);                                         // через транзакцию заменяем второй фрагмент первым. Контейнер - вьюха в которой будет лежать наш фрагмент
-        // TODO: invoke function which apply changes of the transaction                             // TODO
         transaction.commit();                                                                       // commit - осуществление транзакции
     }
 
-    public void openSecondFragment(int min, int max) {                                             // функция открытия второго фрагмента
-        firstFragmentOn = false;                                                                     // флаг активного второго окна
+    public void openSecondFragment(int min, int max) {                                              // функция открытия второго фрагмента
+        firstFragmentOn = false;                                                                    // флаг активного второго окна
         final Fragment secondFragment = SecondFragment.newInstance(min, max);                       // создаем новый второй фрагмент
         final FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();     // getSupportFragmentManager - чтобы запускать фрагмент из Активити
         transaction.replace(R.id.container, secondFragment);                                        // Через транзакцию заменяем первый фрагмент вторым. Контейнер - вьюха в которой будет лежать наш фрагмент
